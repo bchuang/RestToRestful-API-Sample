@@ -9,6 +9,7 @@ using System.Web.Http;
 namespace TestWebAPI.Controllers
 {
     [RoutePrefix("api/Room")]
+    [Route("{roomId?}")]
     /// <summary> Rest WebAPI - Room </summary>
     public class RoomController : ApiController
     {
@@ -22,13 +23,12 @@ namespace TestWebAPI.Controllers
             return RoomList.Rooms;
         }
 
-        [Route("{roomId}")]
         public Room Get(string roomId)
         {
             return RoomList.Rooms.Where(o => o.RoomId == roomId).FirstOrDefault();
         }
 
-        [Route("room/{roomId}/users")]
+        [Route("{roomId}/Users")]
         public List<User> GetUsers(string roomId)
         {
             var roomData = RoomList.Rooms.Where(o => o.RoomId == roomId).FirstOrDefault();
@@ -39,14 +39,15 @@ namespace TestWebAPI.Controllers
             }
         }
 
-        [Route("room/{roomId}/users/{empId}")]
+        [Route("{roomId}/Users/{empId}")]
+        [HttpGet]
         public User FindUser(string roomId, string empId)
         {
             var roomData = RoomList.Rooms.Where(o => o.RoomId == roomId && o.Users.Exists(i => i.EmpId == empId)).FirstOrDefault();
             if (roomData == null) { return null; }
             else
             {
-                return roomData.Users.FirstOrDefault();
+                return roomData.Users.Where(o => o.EmpId == empId).FirstOrDefault();
             }
         }
 
@@ -103,7 +104,10 @@ namespace TestWebAPI.Controllers
             for (var i = 1; i < 10; i++)
             {
                 var userList = new List<User>();
-                userList.Add(new User { EmpId = i.ToString(), Name = $"Name_{i}" });
+                for (var id = i; id < 10; id++)
+                {
+                    userList.Add(new User { EmpId = id.ToString(), Name = $"Name_{id}" });
+                }
                 var room = new Room { No = i, RoomId = i.ToString(), RoomName = $"No.{i}", Users = userList };
                 RoomList.Rooms.Add(room);
             }
