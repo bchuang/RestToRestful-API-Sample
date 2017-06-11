@@ -8,6 +8,7 @@ using System.Web.Http;
 
 namespace TestWebAPI.Controllers
 {
+    [RoutePrefix("api/Room")]
     /// <summary> Rest WebAPI - Room </summary>
     public class RoomController : ApiController
     {
@@ -21,9 +22,32 @@ namespace TestWebAPI.Controllers
             return RoomList.Rooms;
         }
 
-        public Room Get(int id)
+        [Route("{roomId}")]
+        public Room Get(string roomId)
         {
-            return RoomList.Rooms.Where(o => o.RoomId == id.ToString()).FirstOrDefault();
+            return RoomList.Rooms.Where(o => o.RoomId == roomId).FirstOrDefault();
+        }
+
+        [Route("room/{roomId}/users")]
+        public List<User> GetUsers(string roomId)
+        {
+            var roomData = RoomList.Rooms.Where(o => o.RoomId == roomId).FirstOrDefault();
+            if (roomData == null) { return null; }
+            else
+            {
+                return roomData.Users;
+            }
+        }
+
+        [Route("room/{roomId}/users/{empId}")]
+        public User FindUser(string roomId, string empId)
+        {
+            var roomData = RoomList.Rooms.Where(o => o.RoomId == roomId && o.Users.Exists(i => i.EmpId == empId)).FirstOrDefault();
+            if (roomData == null) { return null; }
+            else
+            {
+                return roomData.Users.FirstOrDefault();
+            }
         }
 
         /// <summary> Create </summary>
@@ -58,9 +82,9 @@ namespace TestWebAPI.Controllers
         /// <summary> Delete </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool Delete(string id)
+        public bool Delete(string roomId)
         {
-            RoomList.Rooms.RemoveAll(i => i.RoomId == id);
+            RoomList.Rooms.RemoveAll(i => i.RoomId == roomId);
             return true;
         }
 
