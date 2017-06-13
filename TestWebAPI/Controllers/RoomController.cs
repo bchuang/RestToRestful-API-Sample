@@ -8,26 +8,35 @@ using System.Web.Http;
 
 namespace TestWebAPI.Controllers
 {
+    /// <summary> Rest WebAPI - Room </summary>
     [RoutePrefix("api/Room")]
     [Route("{roomId?}")]
-    /// <summary> Rest WebAPI - Room </summary>
     public class RoomController : ApiController
     {
+        /// <summary> RoomController </summary>
         public RoomController()
         {
             InitialRoomList();
         }
 
+        /// <summary> Get Room List </summary>
+        /// <returns></returns>
         public List<Room> Get()
         {
             return RoomList.Rooms;
         }
 
+        /// <summary> Get Room Info </summary>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
         public Room Get(string roomId)
         {
             return RoomList.Rooms.Where(o => o.RoomId == roomId).FirstOrDefault();
         }
 
+        /// <summary> Get Room User List </summary>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
         [Route("{roomId}/Users")]
         public List<User> GetUsers(string roomId)
         {
@@ -39,6 +48,10 @@ namespace TestWebAPI.Controllers
             }
         }
 
+        /// <summary> Get Room User Info </summary>
+        /// <param name="roomId"></param>
+        /// <param name="empId"></param>
+        /// <returns></returns>
         [Route("{roomId}/Users/{empId}")]
         [HttpGet]
         public User FindUser(string roomId, string empId)
@@ -81,7 +94,7 @@ namespace TestWebAPI.Controllers
         }
 
         /// <summary> Delete </summary>
-        /// <param name="id"></param>
+        /// <param name="roomId"></param>
         /// <returns></returns>
         public bool Delete(string roomId)
         {
@@ -90,8 +103,6 @@ namespace TestWebAPI.Controllers
         }
 
         /// <summary> Partial Update </summary>
-        /// <param name="roomId"></param>
-        /// <param name="room"></param>
         /// <returns></returns>
         public bool Patch()
         {

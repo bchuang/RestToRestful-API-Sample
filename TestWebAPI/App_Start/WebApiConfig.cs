@@ -13,7 +13,7 @@ namespace TestWebAPI
 
             // Web API 路由
             config.MapHttpAttributeRoutes();
-            config.Routes.MapHttpRoute("Default", "api/{controller}");
+            //config.Routes.MapHttpRoute("Default", "api/{controller}");
 
             //config.Routes.MapHttpRoute(
             //    name: "DefaultApi",
